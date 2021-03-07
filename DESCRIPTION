@@ -1,0 +1,32 @@
+Package: OvfSim
+Title: Simulate number of catchment overflow
+Version: 0.0.0.9000
+Authors@R: 
+    person(given = "Dariusz",
+           family = "Majerek",
+           role = c("aut", "cre"),
+           email = "d.majerek@pollub.pl",
+           comment = c(ORCID = "0000-0002-0035-7187 "))
+Description: The bunch of functions to simulate rainfall events based on fitted distribution and to calculate number of catchment overflows. You can fit Gamma, Pareto, Weibull, GEV, Log-normal and expontetial distribution to rainfall parameters (precipitation depth and time). In simulation you can set catchment area parameters like sealing and sewerage network density.
+License: MIT + file LICENSE
+Encoding: UTF-8
+LazyData: true
+Roxygen: list(markdown = TRUE)
+RoxygenNote: 7.1.1
+Imports: 
+    dplyr,
+    gtsummary,
+    tibble,
+    fitdistrplus,
+    cowplot,
+    EnvStats,
+    ggplot2,
+    latex2exp
+Depends: 
+    R (>= 2.10),
+    actuar,
+    evd
+Suggests: 
+    knitr,
+    rmarkdown
+VignetteBuilder: knitr
