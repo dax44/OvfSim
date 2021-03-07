@@ -9,6 +9,8 @@ Authors@R:
            comment = c(ORCID = "0000-0002-0035-7187 "))
 Description: The bunch of functions to simulate rainfall events based on fitted distribution and to calculate number of catchment overflows. You can fit Gamma, Pareto, Weibull, GEV, Log-normal and expontetial distribution to rainfall parameters (precipitation depth and time). In simulation you can set catchment area parameters like sealing and sewerage network density.
 License: MIT + file LICENSE
+URL: https://github.com/dax44/OvfSim
+BugReports: https://github.com/dax44/OvfSim/issues
 Encoding: UTF-8
 LazyData: true
 Roxygen: list(markdown = TRUE)
