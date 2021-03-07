@@ -3,17 +3,84 @@ title: "OvfSim"
 output: rmarkdown::html_vignette
 vignette: >
   %\VignetteIndexEntry{OvfSim}
-  %\VignetteEngine{knitr::rmarkdown}
   %\VignetteEncoding{UTF-8}
+  %\VignetteEngine{knitr::rmarkdown}
+editor_options: 
+  chunk_output_type: console
 ---
 
 ```{r, include = FALSE}
 knitr::opts_chunk$set(
   collapse = TRUE,
-  comment = "#>"
+  comment = "#>",
+  warning = F,
+  message = F
 )
 ```
 
 ```{r setup}
 library(OvfSim)
 ```
+
+## Introduction
+
+OvfSim is a banch of R functions which allows you to estimate an optimal distribution to set of parameters of rainfall, assess the level of distribution fitting to empirical data, simulate rainfall events according to fitted distributions. Moreover, the software can estimate number of catchment overflows based on logistic regression model and catchment's parameters.
+
+Before you start to use OvfSim you have to install R @rcoreteam2016 and some packages: `ggplot2`, `dplyr`, `tibble`, `latex2exp`, `cowplot`, `gtsummary`, `fitdistrplus`, `actuar`, `evd` and `EnvStats`.
+
+This software works on predefined logistic regression model built on data acquired for catchment near Kielce in Poland, but if you want to estimate your own model on your data, you should specify model according following instruction.
+
+## Logistic Regression
+
+Read your data from any format by `dt.logit=rio::import(filename)`. Your data should have following variables (the order is arbitrary): 
+
+- `Overflow` - number of overflows,
+- `P` - rainfall depth, 
+- `t` - duration of precipitation, 
+- `Imp` - the level of imperviousness of the catchment area, 
+- `Impu` - the level of imperviousness of the area lying below the analysed catchment area, 
+- `Gk`- unitary length of the main collector in the catchment per impervious area.
+
+Fit glm model by the function inside `OvfSim` package named `logit`
+
+`logit(dt.logit)`.
+
+## Rainfall distribution fit
+
+Now you can fit the optimal theoretical distribution. Import your data as `dt` (it should contain `P` and `t` measurements). 
+
+```{r include=FALSE}
+dt <- data.frame(P = rgamma(100, shape = 12, rate = 0.2),
+                 t = rlnorm(100, meanlog = 5, sdlog = 1))
+```
+
+The example of fitting distribution to convectional type of rainfall (in Kielce convectional rainfall lasts between 0 and 150) for parameter `P`
+
+```{r fig.height=6, fig.width=8}
+rain_dist(dt, P, rt = c(0,150), output = "fit")
+```
+
+The optimal distribution and parameters could be shown by
+
+```{r}
+rain_dist(dt, P, rt = c(0,150), output = "best.fit")
+```
+
+## Rainfall simulation
+
+You can also simulate rainfall of particular sets of parameters of catchment and rainfall type. For example let simulate 10000 samples of convectional rainfall setting Gk = 0.01.
+
+Before you simulate data you should build the model
+
+```{r}
+data("dt.logit")
+mod <- logit(dt.logit)
+```
+
+
+```{r fig.height=5, fig.width=8}
+set.seed(2021)
+MC_logit(dt, rt = c(0,150), n=10000, Imp = 0.2, Impu = 0.3, Gk = 0.01)
+```
+
+Among 10000 simulated samples of convectional rainfall with Imp = 0.2, Impu = 0.3, Gk = 0.01, function shown the number overflow occurs. Cumulative distribution function of probability of overflow (p) and intensity (i) were shown.
